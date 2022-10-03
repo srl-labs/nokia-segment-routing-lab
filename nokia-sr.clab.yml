@@ -1,0 +1,69 @@
+name: sr
+
+topology:
+  kinds:
+    vr-sros:
+      image: registry.srlinux.dev/pub/vr-sros:22.7.R1   # internal image, external users should build/use their own image
+      license: ./license_sr.key                         # license file must be obtained from Nokia
+    linux:
+      image: ghcr.io/hellt/network-multitool
+
+  nodes:
+    R1:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R1.cfg
+
+    R2:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R2.cfg
+
+    R3:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R3.cfg
+
+    R4:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R4.cfg
+
+    R5:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R5.cfg
+
+    R6:
+      kind: vr-sros
+      type: sr-1
+      #startup-config: ./configs/R6.cfg
+
+    client1:
+      kind: linux
+      binds:
+        - ./configs/eth1.sh:/tmp/eth1.sh
+      exec:
+        - bash /tmp/eth1.sh
+        - ip addr add 192.168.10.11/24 dev eth1.10
+
+    client2:
+      kind: linux
+      binds:
+        - ./configs/eth1.sh:/tmp/eth1.sh
+      exec:
+        - bash /tmp/eth1.sh
+        - ip addr add 192.168.10.12/24 dev eth1.10
+
+  links:
+    - endpoints: ["R1:eth2", "R3:eth1"]
+    - endpoints: ["R1:eth3", "R4:eth1"]
+    - endpoints: ["R3:eth2", "R4:eth2"]
+    - endpoints: ["R3:eth3", "R5:eth3"]
+    - endpoints: ["R4:eth3", "R6:eth3"]
+    - endpoints: ["R5:eth1", "R2:eth2"]
+    - endpoints: ["R6:eth1", "R2:eth3"]
+    - endpoints: ["R5:eth2", "R6:eth2"]
+
+    - endpoints: ["client1:eth1", "R1:eth1"]
+    - endpoints: ["client2:eth1", "R2:eth1"]
