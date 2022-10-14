@@ -9,61 +9,92 @@ topology:
       image: ghcr.io/hellt/network-multitool
 
   nodes:
-    R1:
+    r1:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R1.cfg
+      startup-config: ./configs/R1.cfg
 
-    R2:
+    r2:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R2.cfg
+      startup-config: ./configs/R2.cfg
 
-    R3:
+    r3:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R3.cfg
+      startup-config: ./configs/R3.cfg
 
-    R4:
+    r4:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R4.cfg
+      startup-config: ./configs/R4.cfg
 
-    R5:
+    r5:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R5.cfg
+      startup-config: ./configs/R5.cfg
 
-    R6:
+    r6:
       kind: vr-sros
       type: sr-1
-      #startup-config: ./configs/R6.cfg
+      startup-config: ./configs/R6.cfg
 
     client1:
       kind: linux
       binds:
-        - ./configs/eth1.sh:/tmp/eth1.sh
+        - ./configs/clients:/config
       exec:
-        - bash /tmp/eth1.sh
-        - ip addr add 192.168.10.11/24 dev eth1.10
+        - bash /config/eth1.sh
+        - ip addr add 10.0.1.10/24 dev eth1.10
+        - ip r add 10.0.2.0/24 via 10.0.1.1
 
     client2:
       kind: linux
       binds:
-        - ./configs/eth1.sh:/tmp/eth1.sh
+        - ./configs/clients:/config
       exec:
-        - bash /tmp/eth1.sh
-        - ip addr add 192.168.10.12/24 dev eth1.10
+        - bash /config/eth1.sh
+        - ip addr add 10.0.2.10/24 dev eth1.10
+        - ip r add 10.0.1.0/24 via 10.0.2.1
+        - iperf3 -s -p 5201 -D > iperf3_1.log
+
+    ### TELEMETRY STACK ###
+    gnmic:
+      kind: linux
+      image: ghcr.io/karimra/gnmic:0.25.0-rc1
+      binds:
+        - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
+      cmd: --config /gnmic-config.yml --log subscribe
+
+    prometheus:
+      kind: linux
+      image: prom/prometheus:v2.35.0
+      binds:
+        - configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      cmd: --config.file=/etc/prometheus/prometheus.yml
+      ports:
+        - 9090:9090
+
+    grafana:
+      kind: linux
+      image: grafana/grafana:8.5.2
+      binds:
+        - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+        - configs/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+        - configs/grafana/dashboards:/var/lib/grafana/dashboards
+        - configs/grafana/grafana-flowcharting:/var/lib/grafana/plugins/grafana-flowcharting
+      ports:
+        - 3000:3000
 
   links:
-    - endpoints: ["R1:eth2", "R3:eth1"]
-    - endpoints: ["R1:eth3", "R4:eth1"]
-    - endpoints: ["R3:eth2", "R4:eth2"]
-    - endpoints: ["R3:eth3", "R5:eth3"]
-    - endpoints: ["R4:eth3", "R6:eth3"]
-    - endpoints: ["R5:eth1", "R2:eth2"]
-    - endpoints: ["R6:eth1", "R2:eth3"]
-    - endpoints: ["R5:eth2", "R6:eth2"]
+    - endpoints: ["r1:eth2", "r3:eth1"]
+    - endpoints: ["r1:eth3", "r4:eth1"]
+    - endpoints: ["r3:eth2", "r4:eth2"]
+    - endpoints: ["r3:eth3", "r5:eth3"]
+    - endpoints: ["r4:eth3", "r6:eth3"]
+    - endpoints: ["r5:eth1", "r2:eth2"]
+    - endpoints: ["r6:eth1", "r2:eth3"]
+    - endpoints: ["r5:eth2", "r6:eth2"]
 
-    - endpoints: ["client1:eth1", "R1:eth1"]
-    - endpoints: ["client2:eth1", "R2:eth1"]
+    - endpoints: ["client1:eth1", "r1:eth1"]
+    - endpoints: ["client2:eth1", "r2:eth1"]
