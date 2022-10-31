@@ -1,5 +1,5 @@
-<mxfile host="app.diagrams.net" modified="2022-10-31T08:50:57.333Z" agent="5.0 (Windows)" etag="_mSZX9nHes3w2lZ-WzaD" version="20.5.1" type="github">
-  <diagram id="HZC__QIkmaJ52SRcgxRA" name="Page-1">
+<mxfile host="app.diagrams.net" modified="2022-10-31T08:54:20.895Z" agent="5.0 (Windows)" etag="RO3fVVnRXJp-rHFd8NVk" version="20.5.1" type="github">
+  <diagram id="HZC__QIkmaJ52SRcgxRA" name="topology">
     <mxGraphModel dx="1185" dy="627" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#495766" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -8,19 +8,19 @@
           <mxGeometry x="615" y="285" width="61" height="10" as="geometry" />
         </mxCell>
         <mxCell id="H_-3jwhrtFPsAw-r3LHZ-122" value="&lt;div&gt;&lt;b&gt;&lt;u&gt;Core link delays&lt;/u&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Static configured&lt;/div&gt;&lt;div&gt;upper plane 10ms&lt;/div&gt;&lt;div&gt;lower plane 20ms&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Manrope;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DManrope;fontSize=11;fontColor=#FFFFFF;fillColor=#FFFFFF;strokeColor=none;opacity=10;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="546" y="69.625" width="161" height="109.25" as="geometry" />
+          <mxGeometry x="608" y="117.625" width="161" height="109.25" as="geometry" />
         </mxCell>
         <mxCell id="H_-3jwhrtFPsAw-r3LHZ-123" value="&lt;b&gt;&lt;u&gt;Core link&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;192.168.XY.Z/30&lt;br&gt;&lt;/b&gt;&lt;br&gt;where &lt;br&gt;&lt;b&gt;X&lt;/b&gt; is the lower node ID &lt;br&gt;&lt;b&gt;Y&lt;/b&gt; is the higher node ID&lt;br&gt;&lt;b&gt;Z&lt;/b&gt; lower value is applied to lower router ID interface" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Manrope;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DManrope;fontSize=11;fontColor=#FFFFFF;fillColor=#FFFFFF;strokeColor=none;opacity=10;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="195" y="69" width="161" height="110.5" as="geometry" />
+          <mxGeometry x="257" y="117" width="161" height="110.5" as="geometry" />
         </mxCell>
         <mxCell id="H_-3jwhrtFPsAw-r3LHZ-124" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Topology and underlay addressing plan&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=16;fontFamily=Manrope;fontStyle=1;fontColor=#FFFFFF;" parent="1" vertex="1">
           <mxGeometry x="277" y="522" width="304" height="31" as="geometry" />
         </mxCell>
         <mxCell id="H_-3jwhrtFPsAw-r3LHZ-132" value="&lt;b&gt;&lt;u&gt;System IP&lt;/u&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;192.0.2.X/32&lt;br&gt;&lt;/b&gt;&lt;br&gt;where&amp;nbsp; &lt;br&gt;X is the node ID" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Manrope;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DManrope;fontSize=11;fontColor=#FFFFFF;fillColor=#FFFFFF;strokeColor=none;opacity=10;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="20" y="71.75" width="161" height="105" as="geometry" />
+          <mxGeometry x="82" y="119.75" width="161" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="H_-3jwhrtFPsAw-r3LHZ-133" value="&lt;div&gt;&lt;u&gt;&lt;b&gt;SR Node SIDs&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;SRGB 100000-100999&lt;br&gt;&lt;/div&gt;&lt;div&gt;Algo 0 Node SIDs index X&lt;br&gt;&lt;/div&gt;&lt;div&gt;Algo 128 Node SIDs index 10+X&lt;br&gt;&lt;/div&gt;&lt;div&gt;where X is the Node ID&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Manrope;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DManrope;fontSize=11;fontColor=#FFFFFF;fillColor=#FFFFFF;strokeColor=none;opacity=10;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="371" y="70.375" width="161" height="107.75" as="geometry" />
+        <mxCell id="H_-3jwhrtFPsAw-r3LHZ-133" value="&lt;div&gt;&lt;u&gt;&lt;b&gt;SR Node SIDs&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;SRGB 100000-100999&lt;br&gt;&lt;/div&gt;&lt;div&gt;Algo 0 Node SIDs index X&lt;br&gt;&lt;/div&gt;&lt;div&gt;Algo 128 Node SIDs index 1X&lt;br&gt;&lt;/div&gt;&lt;div&gt;where X is the Node ID&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Manrope;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DManrope;fontSize=11;fontColor=#FFFFFF;fillColor=#FFFFFF;strokeColor=none;opacity=10;rotation=0;" parent="1" vertex="1">
+          <mxGeometry x="433" y="118.375" width="161" height="107.75" as="geometry" />
         </mxCell>
         <mxCell id="H_-3jwhrtFPsAw-r3LHZ-159" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="289" y="278" width="70" height="60" as="geometry" />
