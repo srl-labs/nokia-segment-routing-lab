@@ -1,4 +1,4 @@
-# SROS Segment Routing: low latency service with Flex-algo
+# SROS SR-MPLS: low latency service with Flex-Algo
 
 ## Deploying the lab
 The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](https://github.com/srl-labs/nokia-segment-routing-lab/blob/master/nokia-sr.clab.yml) file declaratively describes the lab topology.
@@ -22,3 +22,28 @@ docker exec -it clab-sr-client1 bash
 
 ## Configuration
 All nodes come preconfigured thanks to startup-config setting in the topology file [`nokia-sr.clab.yml`](nokia-sr.clab.yml), so there is no need to configure the nodes after deployment. Each node has its own config file which you can find [`configs`](/configs).
+
+
+## Running traffic
+
+To run traffic between the users and the services, leverage `traffic.sh` control script.
+
+To start the traffic from home users to internet service or gaming service:
+
+* `bash traffic.sh start internet` - start traffic from home user to internet service
+* `bash traffic.sh start gamer` - start traffic from gamer to low-latency gaming service
+
+To stop the traffic:
+
+* `bash traffic.sh stop` - stop traffic generation between all nodes
+
+
+
+
+
+## Grafana
+
+## Access details
+
+* Grafana: <http://localhost:3000>
+* Prometheus: <http://localhost:9090/graph>
