@@ -1,4 +1,7 @@
 # SROS SR-MPLS: low latency service with Flex-Algo
+Flexible-Algorithm (Flex-Algo) provides a mechanism for IGPs to compute constraint-based paths across a network. We use a Flexible-Algorithm Definition (FAD) to describe how a particular algorithm should like by defining what metric-type needs to be used when calculating the shortest path. This metric type can be IGP-metric, TE-metric or delay-metric. In this lab we will be using delay-metric to provide a low-latency service. The **goal** of this lab is to show case that per VPN service we can provide one prefix to use delay-metric and another prefix to use standard IGP-metric to calculate the shortest path. All done with Segment Routing and MPLS in the underlay.
+
+This is translated into a home user that has access to two services. One serivice is a low-latency service when gaming while connected to the gaming servers. The other is using standard IGP metric when the user is making use of the internet service.
 
 ## Deploying the lab
 The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](https://github.com/srl-labs/nokia-segment-routing-lab/blob/master/nokia-sr.clab.yml) file declaratively describes the lab topology.
