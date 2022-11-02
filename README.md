@@ -4,13 +4,13 @@ Flexible-Algorithm (Flex-Algo) provides a mechanism for IGPs to compute constrai
 
 This is translated into a home user that has access to two services. One service is a low-latency service when gaming while connected to the gaming servers. The other is using standard IGP metric when the user is making use of the internet service.
 
-This lab also comes with a GPG telemetry stack (gNMIc Prometheus Grafan) to easily monitor how traffic is behaving in the network.
+This lab also comes with a GPG telemetry stack ([gNMIc][gnmic]/[Prometheus][prom]/[Grafana][grafana]) to easily monitor how traffic is behaving in the network.
 
 ![topo](./img/topology.PNG)
 
 ## Deploying the lab
 
-The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](https://github.com/srl-labs/nokia-segment-routing-lab/blob/master/nokia-sr.clab.yml) file declaratively describes the lab topology.
+The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](nokia-sr.clab.yml) file declaratively describes the lab topology.
 
 ```
 clab deploy
@@ -271,3 +271,7 @@ By increasing the latency on the link between R3 and R5 to 60ms, we can see traf
 
 * Grafana: <http://localhost:3000>
 * Prometheus: <http://localhost:9090/graph>
+
+[gnmic]: https://gnmic.openconfig.net
+[prom]: https://prometheus.io/
+[grafana]: https://grafana.com/
