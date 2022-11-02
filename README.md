@@ -24,8 +24,83 @@ docker exec -it clab-sr-client1 bash
 ```
 
 ## Configuration
-All nodes come preconfigured thanks to startup-config setting in the topology file [`nokia-sr.clab.yml`](nokia-sr.clab.yml), so there is no need to configure the nodes after deployment. Each node has its own config file which you can find [`configs`](/configs).
+All nodes come preconfigured thanks to startup-config setting in the topology file [`nokia-sr.clab.yml`](nokia-sr.clab.yml), so there is no need to configure the nodes after deployment. Each node has its own config file which you can find [`configs`](/configs). 
 
+This is the high-level overview to enable Flex-Algo for SR-MPLS:
+
+1. Configure and advertise the Flex-Algo Definition (FAD)
+2. Configure Flex-Algo participation
+3. Configure a Flex-Algo prefix node-SID on all router that will use Flex-Algo
+4. Apply traffic steering use Flex-Algo on VPN service
+
+### 1. Configuring and advertise FAD
+Create the FAD with metric-type delay and advertise it into the IGP. In our case we are using ISIS
+```
+A:admin@R1# admin show configuration /configure routing-options
+    flexible-algorithm-definitions {
+        flex-algo "Flex-Algo-128" {
+            admin-state enable
+            description "Flex-Algo for Delay Metric"
+            metric-type delay
+        }
+    }
+```
+Next enable Flex-Algo under ISIS. Only one router in the domain needs to advertise the FAD but everyone who wants to be part of the Flex-Algo topology needs to participate. In our case only R1 is advertising the FAD and all other routers are particpating.
+```
+A:admin@R1# admin show configuration /configure router isis flexible-algorithms
+    admin-state enable
+    flex-algo 128 {
+        participate true
+        advertise "Flex-Algo-128"
+    }
+
+```
+We can see R1 is advertising the FAD as an ISIS Sub-Tlv with metric-type delay. All participating routers now know how the Flex-Algo looks like.
+<pre>
+A:admin@R1# show router isis database R1.00-00 level 2 detail | match "FAD Sub-Tlv" post-lines 5
+    FAD Sub-Tlv:
+        Flex-Algorithm   : 128
+        <b>Metric-Type      : delay</b>
+        Calculation-Type : 0
+        Priority         : 100
+        Flags: M
+</pre>
+### 2. Configure Flex-Algo participation
+Looking into R3 we can see its only participating in the Flex-Algo topology and not advertising the FAD.
+```
+A:admin@R3# admin show configuration /configure router isis flexible-algorithms
+    admin-state enable
+    flex-algo 128 {
+        participate true
+    }
+```
+If we look into the Router Capabilities Tlv of R3 we can see its supporting two SR Algo's, the default SFP algorithm based on IGP-metric and Flex-Algo 128 based on delay-metric
+<pre>
+A:admin@R3# show router isis database R3.00-00 level 2 detail | match "Router Cap" post-lines 5
+  Router Cap : 192.0.2.3, D:0, S:0
+    TE Node Cap : B E M  P
+    SR Cap: IPv4 MPLS-IPv6
+       SRGB Base:100000, Range:1000
+    <b>SR Alg: metric based SPF, 128</b>
+    Node MSD Cap: BMI : 12 ERLD : 15
+</pre>
+
+### Verify that link delays are advertised into ISIS
+In our topology is the upper plane (R1->R3->R5-R2) confgigured with 10ms delay staticly. While to lower plane (R1->R4->R6->R2) is configured with 20ms. We can see R1 is advertising a delay of 10ms for its link towards R3.
+<pre>
+A:admin@R1# show router isis database R1.00-00 detail
+<snipp>
+  TE IS Nbrs   :
+    Nbr   : R3.00
+    Default Metric  : 10
+    Sub TLV Len     : 34
+    IF Addr   : 192.168.13.0
+    Nbr IP    : 192.168.13.1
+    TE APP LINK ATTR    :
+      SABML-flag:Non-Legacy SABM-flags:   X
+        <b>Delay Min : 10000 Max : 10000</b>
+    Adj-SID: Flags:v4VL Weight:0 Label:524285
+</pre>
 
 ## Running traffic
 
