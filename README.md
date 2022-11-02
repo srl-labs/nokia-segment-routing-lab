@@ -30,10 +30,10 @@ This is the high-level overview to enable Flex-Algo for SR-MPLS:
 
 1. Configure and advertise the Flex-Algo Definition (FAD)
 2. Configure Flex-Algo participation
-3. Configure a Flex-Algo prefix node-SID on all router that will use Flex-Algo
-4. Apply traffic steering use Flex-Algo on VPN service
+3. Configure a Flex-Algo prefix node-SID on all routers that will use Flex-Algo
+4. Apply traffic steering with Flex-Algo on VPN service
 
-### 1. Configuring and advertise FAD
+### 1. Configure and advertise FAD
 Create the FAD with metric-type delay and advertise it into the IGP. In our case we are using ISIS
 ```
 A:admin@R1# admin show configuration /configure routing-options
@@ -85,8 +85,106 @@ A:admin@R3# show router isis database R3.00-00 level 2 detail | match "Router Ca
     Node MSD Cap: BMI : 12 ERLD : 15
 </pre>
 
+### 3. Configure a Flex-Algo prefix node-SID on all router that will use Flex-Algo
+Assign a prefix node-SID for Segment Routing with Flex-Algo and a prefix node-SID for default Segment Routing. 
+```
+A:admin@R1# admin show configuration /configure router isis interface "system"
+    ipv4-node-sid {
+        index 1
+    }
+    flex-algo 128 
+        ipv4-node-sid {
+            index 11
+        }
+    }
+```
+We can see R1 is advertising into ISIS a Prefix-SID with index 1 for Algo-0, which is the default IGP-based algo, and a Prefix-SID with index 11 for Algo-128 which is our Flex-Algo.
+```
+A:admin@R1# show router isis database R1.00-00 level 2 detail | match "TE IP Reach" post-lines 12
+  TE IP Reach   :
+<snipp>
+    Prefix   : 192.0.2.1
+    Sub TLV   :
+      Prefix-SID Index:1, Algo:0, Flags:NnP
+      Prefix-SID Index:11, Algo:128, Flags:NnP
+```
+
+### 4. Apply traffic steering with Flex-Algo on VPN service
+In the bgp-ipvpn context of our VPN we define Segment Routing as our tunnel between services, which means we use SPF Segment Routing but not necessarily Flex-Algo. For that we need to define a import policy `customer1-import` to define which prefix will be using Flex-Algo.
+```
+A:admin@R1# admin show configuration /configure service vprn "customer1"
+    admin-state enable
+    service-id 1
+    customer "1"
+    bgp-ipvpn {
+        mpls {
+            admin-state enable
+            route-distinguisher "1:1"
+            vrf-target {
+                community "target:65000:1"
+            }
+            vrf-import {
+                policy ["customer1-import"]
+            }
+            auto-bind-tunnel {
+                resolution filter
+                allow-flex-algo-fallback true
+                resolution-filter {
+                    sr-isis true
+                }
+```
+In our `customer1-import` policy `entry 20` we can see we accept gaming specific routes to use Flex-Algo while in `entry 10` we accept internet specific prefixes to use regular Segment Routing based on IGP-metric. 
+```
+A:admin@R1# admin show configuration /configure policy-options policy-statement "customer1-import"
+    entry 10 {
+        from {
+            prefix-list ["internet"]
+            community {
+                name "customer1-import"
+            }
+        }
+        action {
+            action-type accept
+        }
+    }
+    entry 20 {
+        from {
+            prefix-list ["gaming"]
+            community {
+                name "customer1-import"
+            }
+        }
+        action {
+            action-type accept
+            flex-algo 128
+        }
+    }
+    default-action {
+        action-type reject
+    }
+
+```
+```
+A:admin@R1# show router 1 route-table
+
+===============================================================================
+Route Table (Service: 1)
+===============================================================================
+Dest Prefix[Flags]                            Type    Proto     Age        Pref
+      Next Hop[Interface Name]                                    Metric
+-------------------------------------------------------------------------------
+10.0.1.0/24                                   Local   Local     02h37m23s  0
+       to_client1                                                   0
+10.0.2.0/24                                   Remote  BGP VPN   02h35m59s  170
+       192.0.2.2 (tunneled:SR-ISIS:524296)                          30
+20.0.1.0/24                                   Local   Local     02h37m23s  0
+       to_gamer1                                                    0
+20.0.2.0/24                                   Remote  BGP VPN   00h41m02s  170
+       192.0.2.2 (tunneled:SR-ISIS:524300)                          60000
+```
+
 ### Verify that link delays are advertised into ISIS
-In our topology is the upper plane (R1->R3->R5-R2) confgigured with 10ms delay staticly. While to lower plane (R1->R4->R6->R2) is configured with 20ms. We can see R1 is advertising a delay of 10ms for its link towards R3.
+The upper plane (R1->R3->R5-R2) confgigured staticly with a 10ms delay. While to lower plane (R1->R4->R6->R2) is configured with 20ms. We can see R1 is advertising a delay of 10ms for its link towards R3. Now all routers are aware how much delay is on each interface in our ISIS area.
 <pre>
 A:admin@R1# show router isis database R1.00-00 detail
 <snipp>
