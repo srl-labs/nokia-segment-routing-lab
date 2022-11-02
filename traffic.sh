@@ -2,18 +2,29 @@
 
 set -eu
 
-startTraffic() {
-	echo Starting traffic from client1 to client2
-	docker exec clab-sr-client1 bash /config/iperf.sh
+startTrafficGamer() {
+	echo Starting gamer traffic
+	docker exec clab-sr-home bash /config/iperf_gamer.sh
+}
+
+startTrafficNonGamer() {
+	echo Starting non-gamer traffic to internet
+	docker exec clab-sr-home bash /config/iperf_non_gamer.sh
 }
 
 stopTraffic() {
 	echo Stopping traffic
-	docker exec clab-sr-client1 pkill iperf3
+	docker exec clab-sr-home pkill iperf3
 }
 
 if [ $1 == "start" ]; then
-	startTraffic
+	if [ $2 == "gamer" ]; then
+		startTrafficGamer
+	fi
+	if [ $2 == "internet" ]; then
+		startTrafficNonGamer
+	fi
+	
 fi
 
 if [ $1 == "stop" ]; then

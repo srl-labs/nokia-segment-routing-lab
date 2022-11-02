@@ -39,24 +39,29 @@ topology:
       type: sr-1
       startup-config: ./configs/R6.cfg
 
-    client1:
+    home:
       kind: linux
       binds:
         - ./configs/clients:/config
       exec:
         - bash /config/eth1.sh
         - ip addr add 10.0.1.10/24 dev eth1.10
+        - ip addr add 20.0.1.10/24 dev eth1.20
         - ip r add 10.0.2.0/24 via 10.0.1.1
+        - ip r add 20.0.2.0/24 via 10.0.1.1
 
-    client2:
+    services:
       kind: linux
       binds:
         - ./configs/clients:/config
       exec:
         - bash /config/eth1.sh
         - ip addr add 10.0.2.10/24 dev eth1.10
+        - ip addr add 20.0.2.10/24 dev eth1.20
         - ip r add 10.0.1.0/24 via 10.0.2.1
+        - ip r add 20.0.1.0/24 via 10.0.2.1
         - iperf3 -s -p 5201 -D > iperf3_1.log
+        - iperf3 -s -p 5202 -D > iperf3_2.log
 
     ### TELEMETRY STACK ###
     gnmic:
@@ -96,5 +101,5 @@ topology:
     - endpoints: ["r6:eth1", "r2:eth3"]
     - endpoints: ["r5:eth2", "r6:eth2"]
 
-    - endpoints: ["client1:eth1", "r1:eth1"]
-    - endpoints: ["client2:eth1", "r2:eth1"]
+    - endpoints: ["home:eth1", "r1:eth1"]
+    - endpoints: ["services:eth1", "r2:eth1"]

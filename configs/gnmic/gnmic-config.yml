@@ -48,6 +48,13 @@ subscriptions:
     stream-mode: sample
     sample-interval: 5s
 
+  sros_route_metric:
+    paths:
+      - /state/router[router-name=Base]/tunnel-table/ipv4/tunnel[ipv4-prefix=*][list-index=1][nexthop-index=0]/metric
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
 outputs:
   prom:
     type: prometheus
