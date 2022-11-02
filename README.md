@@ -3,6 +3,10 @@ Flexible-Algorithm (Flex-Algo) provides a mechanism for IGPs to compute constrai
 
 This is translated into a home user that has access to two services. One serivice is a low-latency service when gaming while connected to the gaming servers. The other is using standard IGP metric when the user is making use of the internet service.
 
+This lab comes also with a GPG telemetry stack (gNMIc Prometheus Grafan) to easly monitor how traffic is behaving in the network.
+
+![](./img/topology.PNG)
+
 ## Deploying the lab
 The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](https://github.com/srl-labs/nokia-segment-routing-lab/blob/master/nokia-sr.clab.yml) file declaratively describes the lab topology.
 ```
@@ -213,11 +217,15 @@ To stop the traffic:
 
 * `bash traffic.sh stop` - stop traffic generation between all nodes
 
-
-
-
-
-## Grafana
+### 1. Home user starts surfing on the internet. 
+The traffic path to the internet services follows the default ISIS IGP-metric which is 10.
+![](./img/step1-internet-traffic-only.PNG)
+### 2. Gamer starts gaming
+The gamer requires a low-latency service and traffic is following the upper plane which has a total latency of 30ms from R1 to R2.
+![](./img/step2-add-gamer-traffic.png)
+### 3. Adding latency
+By increasing the latency on the link between R3 and R5 to 60ms, we can see traffic shifting to the lower plane. The upper plane has a total delay of 80ms while to lower plane has now a total delay of 60ms. Note that the traffic for the internet user remains the same.
+![](./img/step3-after-delay-increase.PNG)
 
 ## Access details
 
