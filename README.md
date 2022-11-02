@@ -1,9 +1,9 @@
 # SROS SR-MPLS: low latency service with Flex-Algo
 Flexible-Algorithm (Flex-Algo) provides a mechanism for IGPs to compute constraint-based paths across a network. We use a Flexible-Algorithm Definition (FAD) to describe how a particular algorithm should look like by defining what metric-type needs to be used when calculating the shortest path. This metric type can be IGP-metric, TE-metric or delay-metric. In this lab we will be using delay-metric to provide a low-latency service. The **goal** of this lab is to show case that per VPN service we can provide one prefix to use delay-metric and another prefix to use standard IGP-metric to calculate the shortest path. All done with Segment Routing and MPLS in the underlay.
 
-This is translated into a home user that has access to two services. One serivice is a low-latency service when gaming while connected to the gaming servers. The other is using standard IGP metric when the user is making use of the internet service.
+This is translated into a home user that has access to two services. One service is a low-latency service when gaming while connected to the gaming servers. The other is using standard IGP metric when the user is making use of the internet service.
 
-This lab comes also with a GPG telemetry stack (gNMIc Prometheus Grafan) to easly monitor how traffic is behaving in the network.
+This lab comes also with a GPG telemetry stack (gNMIc Prometheus Grafan) to easily monitor how traffic is behaving in the network.
 
 ![](./img/topology.PNG)
 
@@ -49,7 +49,7 @@ A:admin@R1# admin show configuration /configure routing-options
         }
     }
 ```
-Next enable Flex-Algo under ISIS. Only one router in the domain needs to advertise the FAD but everyone who wants to be part of the Flex-Algo topology needs to participate. In our case only R1 is advertising the FAD and all other routers are particpating.
+Next enable Flex-Algo under ISIS. Only one router in the domain needs to advertise the FAD but everyone who wants to be part of the Flex-Algo topology needs to participate. In our case only R1 is advertising the FAD and all other routers are participating.
 ```
 A:admin@R1# admin show configuration /configure router isis flexible-algorithms
     admin-state enable
@@ -78,7 +78,7 @@ A:admin@R3# admin show configuration /configure router isis flexible-algorithms
         participate true
     }
 ```
-If we look into the Router Capabilities Tlv of R3 we can see its supporting two SR Algo's, the default SFP algorithm based on IGP-metric and Flex-Algo 128 based on delay-metric
+If we investigate the Router Capabilities Tlv of R3 we can see its supporting two SR Algo's, the default SFP algorithm based on IGP-metric and Flex-Algo 128 based on delay-metric
 <pre>
 A:admin@R3# show router isis database R3.00-00 level 2 detail | match "Router Cap" post-lines 5
   Router Cap : 192.0.2.3, D:0, S:0
@@ -114,7 +114,7 @@ A:admin@R1# show router isis database R1.00-00 level 2 detail | match "TE IP Rea
 ```
 
 ### 4. Apply traffic steering with Flex-Algo on VPN service
-In the bgp-ipvpn context of our VPN we define Segment Routing as our tunnel between services, which means we use SPF Segment Routing but not necessarily Flex-Algo. For that we need to define a import policy `customer1-import` to define which prefix will be using Flex-Algo.
+In the bgp-ipvpn context of our VPN we define Segment Routing as our tunnel between services, which means we use SPF Segment Routing but not necessarily Flex-Algo. For that we need to define an import policy `customer1-import` to define which prefix will be using Flex-Algo.
 ```
 A:admin@R1# admin show configuration /configure service vprn "customer1"
     admin-state enable
@@ -188,7 +188,7 @@ Dest Prefix[Flags]                            Type    Proto     Age        Pref
 ```
 
 ### Verify that link delays are advertised into ISIS
-The upper plane (R1->R3->R5-R2) confgigured staticly with a 10ms delay. While to lower plane (R1->R4->R6->R2) is configured with 20ms. We can see R1 is advertising a delay of 10ms for its link towards R3. Now all routers are aware how much delay is on each interface in our ISIS area.
+The upper plane (R1->R3->R5-R2) configured statically with a 10ms delay. While to lower plane (R1->R4->R6->R2) is configured with 20ms. We can see R1 is advertising a delay of 10ms for its link towards R3. Now all routers are aware how much delay is on each interface in our ISIS area.
 <pre>
 A:admin@R1# show router isis database R1.00-00 detail
 <snipp>
