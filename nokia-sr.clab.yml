@@ -66,7 +66,7 @@ topology:
     ### TELEMETRY STACK ###
     gnmic:
       kind: linux
-      image: ghcr.io/karimra/gnmic:0.25.0-rc1
+      image: ghcr.io/karimra/gnmic:0.26.0
       binds:
         - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
