@@ -10,6 +10,12 @@ This lab also comes with a GPG telemetry stack ([gNMIc][gnmic]/[Prometheus][prom
 
 ## Deploying the lab
 
+Start with cloning the repository:
+
+```bash
+git clone https://github.com/srl-labs/nokia-segment-routing-lab.git && cd nokia-segment-routing-lab
+```
+
 The lab is deployed with [containerlab](https://containerlab.dev/) project where [`nokia-sr.clab.yml`](nokia-sr.clab.yml) file declaratively describes the lab topology.
 
 ```
