@@ -12,32 +12,32 @@ topology:
     r1:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R1.cfg
+      startup-config: ./configs/R1.partial.txt
 
     r2:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R2.cfg
+      startup-config: ./configs/R2.partial.txt
 
     r3:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R3.cfg
+      startup-config: ./configs/R3.partial.txt
 
     r4:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R4.cfg
+      startup-config: ./configs/R4.partial.txt
 
     r5:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R5.cfg
+      startup-config: ./configs/R5.partial.txt
 
     r6:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/R6.cfg
+      startup-config: ./configs/R6.partial.txt
 
     home:
       kind: linux
