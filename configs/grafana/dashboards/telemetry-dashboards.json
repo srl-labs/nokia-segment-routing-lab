@@ -24,7 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1667373578694,
+  "id": 1,
+  "iteration": 1684922770015,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -474,7 +475,7 @@
             "overlayIcon": false,
             "pattern": "clab-sr-r1:57400:1/1/c2/1:out",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -952,13 +953,13 @@
                 "level": 0
               },
               {
-                "color": "#37872D",
+                "color": "#1F60C4",
                 "comparator": "ge",
                 "level": 0,
                 "value": 500000
               },
               {
-                "color": "#1F60C4",
+                "color": "#37872D",
                 "comparator": "ge",
                 "level": 0,
                 "value": 2000000
@@ -3615,10 +3616,9 @@
       {
         "allValue": ".*",
         "current": {
-          "isNone": true,
           "selected": false,
-          "text": "None",
-          "value": ""
+          "text": "clab-sr-r1:57400",
+          "value": "clab-sr-r1:57400"
         },
         "datasource": {
           "type": "prometheus",
